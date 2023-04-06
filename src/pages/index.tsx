@@ -1,6 +1,8 @@
 import Tabela from "../components/Tabela";
 import Layout from "../components/Layout";
 import Cliente from "../core/Cliente";
+import Botao from "@/components/Botao";
+import Formulario from "@/components/Formulario";
 
 export default function Home() {
   const clientes = [
@@ -9,6 +11,12 @@ export default function Home() {
     new Cliente('Carlos', 23, '3'),
     new Cliente('Pedro', 54, '4'),
   ]
+  function clienteSelecionado(cliente: Cliente) {
+
+  }
+  function clienteExcluido(cliente: Cliente) {
+
+  }
   return (
     <>
       <div className="
@@ -17,7 +25,17 @@ export default function Home() {
         text-white
       ">
         <Layout titulo="Cadastro simples">
-          <Tabela clientes={clientes}></Tabela>
+          <div className="flex justify-end">
+            <Botao className="mb-4" cor="green">Novo Cliente</Botao>
+          </div>
+          <Tabela
+            clientes={clientes}
+            clienteSelecionado={clienteSelecionado}
+            clienteExcluido={clienteExcluido}
+          ></Tabela>
+          <br />
+          <br />
+          <Formulario cliente={clientes[0]} />
         </Layout>
       </div>
     </>
