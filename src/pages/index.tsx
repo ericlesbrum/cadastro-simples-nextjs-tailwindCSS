@@ -6,38 +6,19 @@ import Formulario from "@/components/Formulario";
 import { useEffect, useState } from "react";
 import ClienteRepositorio from "@/core/ClienteRepositorio";
 import ColecaoCliente from "@/backend/db/ColecaoCliente";
+import useClientes from "@/hooks/useClientes";
 
 export default function Home() {
-  const repo: ClienteRepositorio = new ColecaoCliente();
-
-  const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela');
-  const [cliente, setCliente] = useState<Cliente>(Cliente.vazio());
-  const [clientes, setClientes] = useState<Cliente[]>([])
-
-  useEffect(obterTodos, []);
-
-  function obterTodos() {
-    repo.obterTodos().then(clientes => {
-      setClientes(clientes)
-      setVisivel('tabela')
-    })
-  }
-  function clienteSelecionado(cliente: Cliente) {
-    setCliente(cliente);
-    setVisivel('form');
-  }
-  async function clienteExcluido(cliente: Cliente) {
-    await repo.excluir(cliente)
-    obterTodos();
-  }
-  async function clienteSalvo(cliente: Cliente) {
-    await repo.salvar(cliente)
-    obterTodos()
-  }
-  function clienteCriado() {
-    setVisivel('form');
-    setCliente(Cliente.vazio());
-  }
+  const {
+    clienteCriado,
+    clienteExcluido,
+    clienteSalvo,
+    clienteSelecionado,
+    cliente,
+    clientes,
+    tabelaVisivel,
+    exibirTabela
+  } = useClientes()
 
   return (
     <>
@@ -48,7 +29,7 @@ export default function Home() {
       ">
         <Layout titulo="Cadastro simples">
           {
-            visivel === 'tabela' ? (
+            tabelaVisivel ? (
               <>
                 <div className="flex justify-end">
                   <Botao
@@ -67,7 +48,7 @@ export default function Home() {
             ) :
               (
                 <Formulario
-                  cancelado={() => setVisivel('tabela')}
+                  cancelado={() => exibirTabela}
                   clienteMudou={clienteSalvo}
                   cliente={cliente}
                 />
